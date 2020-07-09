@@ -1,0 +1,7 @@
+#home-nav-list-item a, #home-nav-list-item{
+  color: white;
+  font-size: 25px;
+}
+#home-nav-list-item a:hover {
+  text-decoration: none;
+}

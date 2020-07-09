@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "resersi-ui": {
+    "reversi-ui": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/resersi-ui",
+            "outputPath": "dist/reversi-ui",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -24,9 +24,16 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/@fortawesome/fontawesome-free/css/all.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/jquery/dist/jquery.min.js",
+              "node_modules/popper.js/dist/popper.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "./node_modules/@fortawesome/fontawesome-free/js/all.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -62,18 +69,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "resersi-ui:build"
+            "browserTarget": "reversi-ui:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "resersi-ui:build:production"
+              "browserTarget": "reversi-ui:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "resersi-ui:build"
+            "browserTarget": "reversi-ui:build"
           }
         },
         "test": {
@@ -110,18 +117,18 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "resersi-ui:serve"
+            "devServerTarget": "reversi-ui:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "resersi-ui:serve:production"
+              "devServerTarget": "reversi-ui:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "resersi-ui",
+  "defaultProject": "reversi-ui",
   "cli": {
     "analytics": "00f03f54-90cd-4c18-8d7f-3ba185903e30"
   }
