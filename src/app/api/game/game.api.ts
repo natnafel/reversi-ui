@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 // import {Response} from '@angular/http';
 import {environment} from '../../../environments/environment';
 import {GameResponse} from '../../contracts/response/game.response'
+import { Observable } from 'rxjs';
 
 const SERVICE_BASE_URL: string = environment.apiBaseUrl + '/games';
 
@@ -11,7 +12,6 @@ const SERVICE_BASE_URL: string = environment.apiBaseUrl + '/games';
 })
 export class GameApi {
 
-  gameList:GameResponse[];
   constructor(
     
     private http: HttpClient
@@ -19,10 +19,9 @@ export class GameApi {
   ) { }
   
   // method to get the list of games
-  getGameList(){
-    // return this.gameList;
-    return this.http.get(SERVICE_BASE_URL,{
+  getGameList(): Observable<GameResponse[]>{
+    return this.http.get<GameResponse[]> (SERVICE_BASE_URL,{
       observe:"body"
-    })
+    });
   }
 }

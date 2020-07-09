@@ -1,9 +1,11 @@
+import {User} from '../shared/user'
 export interface GameResponse {
-  gameUUID: string;
-  player1: string;
-  player2: string;
-  startDate: Date,
-  winner?: string;
-  endDate?: Date,
+  uuid: string;
+  player1: User;
+  player2: User;
+  createdAt: Date;
+  updatedAt: Date;
+  status:string;
   lastMoveId?: number;
+  winner?: string;
 }

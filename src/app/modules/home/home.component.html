@@ -1,12 +1,8 @@
 <div class="container">
 
-    <!-- <button (click)="getGameList()">Check List</button> -->
-
-    <h1  class="text-center">welcome to reversi ui</h1>
     <div class="row">
       <div class="col-8">
-        <!-- <h1 class="text-center">Previous games</h1> -->
-        <button (click)="getGameList()">Check Previous games</button>
+        <h2 >Previous games</h2>
         <table class="table table-striped">
           <thead>
             <tr>
@@ -22,18 +18,26 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let game of games">
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-            </tr>
+            <ng-container *ngFor= "let game of games; let i = index">
+              <tr  *ngIf="game['status']==='CLOSED'">
+                <th scope="row">{{i+1}}</th>
+                <td>{{game.player1.username}}</td>
+                <td>{{game.player2.username}}</td>
+                <td>{{game.createdAt | date: "shortDate"}}</td>
+                <td>{{game.createdAt | date: "mediumTime"}}</td>
+                <td>{{game.updatedAt | date: "shortDate"}}</td>
+                <td>{{game.updatedAt | date: "mediumTime"}}</td>
+                <td>{{game.winner}}</td>
+                <td >
+                  <button (click)="viewGameDetails()" class="btn btn-info">On update</button> 
+                </td>
+              </tr>
+           </ng-container>
           </tbody>
         </table>
       </div>
       <div class="col-4">
-        <!-- <h1 class="text-center">Active games</h1> -->
-        <button (click)="getGameList()">Check Active games</button>
+        <h2 >Active games</h2>
         <table class="table table-striped">
           <thead>
             <tr>
@@ -45,18 +49,19 @@
                 <th scope="col">Details</th>
               </tr>
           </thead>
-          <tbody>
-            <tr *ngFor="let game of games">
-                <th scope="row">1</th>
-                <td>game.player1</td>
-                <td>game.player2</td>
-                <td>game.startDate</td>
-                <td>game.startDate</td>
-                <td>game.endDate</td>
-                <td>game.endDate</td>
-                <td>game.winner</td>
-                <td>game.gameUUID</td>
+          <tbody >
+            <ng-container *ngFor= "let game of games; let i = index">
+              <tr  *ngIf="game['status']==='OPEN'">
+                <th scope="row">{{i+1}}</th>
+                <td>{{game.player1.username}}</td>
+                <td>{{game.player2.username}}</td>
+                <td>{{game.createdAt | date: "shortDate"}}</td>
+                <td>{{game.createdAt | date: "mediumTime"}}</td>
+                <td >
+                  <button (click)="viewGameDetails()" class="btn btn-info">On update</button> 
+                </td>
               </tr>
+           </ng-container>
           </tbody>
         </table>
       </div>
