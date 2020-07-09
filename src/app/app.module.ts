@@ -6,6 +6,10 @@ import {DefaultModule} from './layouts/default/default.module';
 import {AppRoutingModule} from './app-routing/app-routing.module';
 import {HttpClientModule} from '@angular/common/http';
 
+//import GameApi
+import {GameApi} from './api/game/game.api';
+
+
 @NgModule({
   declarations: [
     AppComponent
@@ -16,7 +20,7 @@ import {HttpClientModule} from '@angular/common/http';
     AppRoutingModule,
     DefaultModule
   ],
-  providers: [],
+  providers: [GameApi],// include GameApi in providers
   bootstrap: [AppComponent]
 })
 export class AppModule { }
