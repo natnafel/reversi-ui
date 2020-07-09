@@ -1,0 +1,23 @@
+.game-main-board>div:nth-child(odd) {
+    background: black;
+    border: 2px solid green;
+}
+
+.game-main-board>div:nth-child(even) {
+    background: white;
+    border: 2px solid green;
+}
+
+.game-main-board div {
+    height: 100px;
+    width: calc(100% / 12);
+    /**enter number of columns that you want*/
+    float: left;
+    overflow: hidden;
+}
+
+.main-board-container {
+    width: 100%;
+    height: 100vh;
+    background-color: darkgray;
+}
