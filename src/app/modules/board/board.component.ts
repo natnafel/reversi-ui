@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import {GameResponse} from '../../contracts/response/game.response'
+import {GameResponse} from '../../contracts/response/game.response';
 import {GameApi} from '../../api/game/game.api';
-import {Router, ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 
 @Component({
@@ -11,33 +11,25 @@ import {Router, ActivatedRoute} from '@angular/router';
   styleUrls: ['./board.component.css']
 })
 export class BoardComponent implements OnInit {
-  board:string[][];
   game: GameResponse;
   gameId: string;
-  constructor( private gameService: GameApi,
+  constructor(
+    private gameService: GameApi,
     private router: Router,
     private route: ActivatedRoute) { this.route.params
-      .subscribe(params=>{
+      .subscribe(params => {
         this.gameId = params.gameUUID;
-      })
+      });
   }
 
   ngOnInit(): void {
-    this.getGameDetails(this.gameId);
+    this.loadGameDetails(this.gameId);
   }
 
-  createNewBoard(){
-      console.log("game id is =========" + this.gameId)
-    }
-
-  getGameDetails(gameId:string){
+  loadGameDetails(gameId: string): void {
     this.gameService.getGameDetails(gameId)
-    .subscribe((game)=>{
-                this.game = game;
-                this.board = game.board;
-              }
-    ,(error)=> console.log("Game detail request failed"));
-    
+    .subscribe((game) => this.game = game
+    ,(error) => console.log('Game detail request failed'));
   }
 
 }
