@@ -1,7 +1,14 @@
+import {User} from '../shared/user';
+import {GameStatus} from '../shared/game-status.model';
+import {Player} from '../shared/player.model';
+
 export interface GameResponse {
-  gameUUID: string;
-  player1: string;
-  player2: string;
-  winner?: string;
+  uuid: string;
+  player1: User;
+  player2: User;
+  createdAt: Date;
+  updatedAt: Date;
+  status: GameStatus;
   lastMoveId?: number;
+  winner?: Player;
 }
