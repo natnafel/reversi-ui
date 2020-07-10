@@ -21,10 +21,7 @@ export class GameApi {
   }
 
    // method to get a specific game
-   getGameDetails(gameId:string): Observable<GameResponse>{
-    return this.http.get<GameResponse> (SERVICE_BASE_URL +"/" + gameId,{
-      observe:"body"
-      // ,params:new HttpParams().append("token",localStorage.getItem('token'))
-    });
+   getGameDetails(gameId: string): Observable<GameResponse>{
+    return this.http.get<GameResponse> (SERVICE_BASE_URL + `/${gameId}`);
   }
 }

@@ -2,6 +2,7 @@ import {User} from '../shared/user';
 import {GameStatus} from '../shared/game-status.model';
 import {Player} from '../shared/player.model';
 import {Move}  from '../shared/board.moves'
+import {CellValue} from '../shared/cell-value.model';
 
 export interface GameResponse {
   uuid: string;
@@ -12,6 +13,6 @@ export interface GameResponse {
   status: GameStatus;
   lastMoveId?: number;
   winner?: Player;
-  board?:string[][];
   moves?:Move[];
+  board?: CellValue[][];
 }

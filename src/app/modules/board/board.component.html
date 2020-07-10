@@ -1,10 +1,18 @@
 
-<div *ngIf="board && board.length > 0" class="text-center">
+<!-- <div *ngIf="board && board.length > 0" class="text-center">
     <h1>Board Details</h1>
     <div *ngFor="let i of board">
         <span *ngFor="let j of i">
             <button>{{j}}</button>
-        </span>
+        </span> -->
+<div *ngIf="game?.board && game.board.length > 0" class="text-center">
+    <div *ngFor="let i of game.board">
+        <div *ngFor="let j of i">
+            <div [className]="j % 2 == 0 ? 'board-cell-even' : 'board-cell-odd'">
+              <img alt="white" *ngIf="j === 'w'" width="10px" height="10px" src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.silvertowne.com%2Fp-25672-crown-stackables-1oz-999-silver-medallion.aspx&psig=AOvVaw3f59usaKiOCkxRv4WltnkO&ust=1594495469298000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCPiagtS0w-oCFQAAAAAdAAAAABAJ">
+              <img alt="black" *ngIf="j === 'b'" width="10px" height="10px" src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.iconfinder.com%2Ficons%2F3813530%2Fboardgames_checkers_draughts_games_king_crown_king_piece_monopoly_icon&psig=AOvVaw3f59usaKiOCkxRv4WltnkO&ust=1594495469298000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCPiagtS0w-oCFQAAAAAdAAAAABAD">
+            </div>
+        </div>
     </div>
 
     <div *ngIf="boardMoves && boardMoves.length > 0" class="text-center">
