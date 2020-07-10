@@ -1,70 +1,61 @@
-<div class="container">
-
-    <div class="row">
-      <div class="col-8">
-        <h2 >Previous games</h2>
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Player1</th>
-              <th scope="col">Player2</th>
-              <th scope="col">StartDate</th>
-              <th scope="col">StartTime</th>
-              <th scope="col">EndDate</th>
-              <th scope="col">EndTime</th>
-              <th scope="col">Winner</th>
-              <th scope="col">Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ng-container *ngFor= "let game of games; let i = index">
-              <tr  *ngIf="game['status']==='CLOSED'">
-                <th scope="row">{{i+1}}</th>
-                <td>{{game.player1.username}}</td>
-                <td>{{game.player2.username}}</td>
-                <td>{{game.createdAt | date: "shortDate"}}</td>
-                <td>{{game.createdAt | date: "mediumTime"}}</td>
-                <td>{{game.updatedAt | date: "shortDate"}}</td>
-                <td>{{game.updatedAt | date: "mediumTime"}}</td>
-                <td>{{game.winner}}</td>
-                <td >
-                  <button (click)="viewGameDetails()" class="btn btn-info">On update</button> 
-                </td>
-              </tr>
-           </ng-container>
-          </tbody>
-        </table>
-      </div>
-      <div class="col-4">
-        <h2 >Active games</h2>
-        <table class="table table-striped">
-          <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Player1</th>
-                <th scope="col">Player2</th>
-                <th scope="col">StartDate</th>
-                <th scope="col">StartTime</th>
-                <th scope="col">Details</th>
-              </tr>
-          </thead>
-          <tbody >
-            <ng-container *ngFor= "let game of games; let i = index">
-              <tr  *ngIf="game['status']==='OPEN'">
-                <th scope="row">{{i+1}}</th>
-                <td>{{game.player1.username}}</td>
-                <td>{{game.player2.username}}</td>
-                <td>{{game.createdAt | date: "shortDate"}}</td>
-                <td>{{game.createdAt | date: "mediumTime"}}</td>
-                <td >
-                  <button (click)="viewGameDetails()" class="btn btn-info">On update</button> 
-                </td>
-              </tr>
-           </ng-container>
-          </tbody>
-        </table>
-      </div>
-    </div>
+<div class="row top-buffer">
+  <div class="col-10 offset-1">
+    <h2 >Active games</h2>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Player1</th>
+        <th scope="col">Player2</th>
+        <th scope="col">StartDate</th>
+        <th scope="col">StartTime</th>
+      </tr>
+      </thead>
+      <tbody >
+      <ng-container *ngFor= "let game of activeGames; let i = index">
+        <tr *ngIf="game.status === 'OPEN'" (click)="showGameBoard(game)" clickable>
+          <th scope="row">{{i+1}}</th>
+          <td>{{game.player1.username}}</td>
+          <td>{{game.player2.username}}</td>
+          <td>{{game.createdAt | date: "shortDate"}}</td>
+          <td>{{game.createdAt | date: "mediumTime"}}</td>
+        </tr>
+      </ng-container>
+      </tbody>
+    </table>
   </div>
+</div>
+<div class="row top-buffer">
+  <div class="col-10 offset-1">
+    <h2 >Previous games</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Player1</th>
+          <th scope="col">Player2</th>
+          <th scope="col">StartDate</th>
+          <th scope="col">StartTime</th>
+          <th scope="col">EndDate</th>
+          <th scope="col">EndTime</th>
+          <th scope="col">Winner</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor= "let game of closedGames; let i = index">
+          <tr *ngIf="game.status === 'CLOSED'" (click)="showGameBoard(game)" clickable>
+            <th scope="row">{{i+1}}</th>
+            <td>{{game.player1.username}}</td>
+            <td>{{game.player2.username}}</td>
+            <td>{{game.createdAt | date: "shortDate"}}</td>
+            <td>{{game.createdAt | date: "mediumTime"}}</td>
+            <td>{{game.updatedAt | date: "shortDate"}}</td>
+            <td>{{game.updatedAt | date: "mediumTime"}}</td>
+            <td>{{winnerUsername(game)}}</td>
+          </tr>
+       </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
 

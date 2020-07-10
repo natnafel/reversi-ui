@@ -6,8 +6,6 @@ import {DefaultModule} from './layouts/default/default.module';
 import {AppRoutingModule} from './app-routing/app-routing.module';
 import {HttpClientModule} from '@angular/common/http';
 
-//import GameApi
-import {GameApi} from './api/game/game.api';
 
 
 @NgModule({
@@ -20,7 +18,7 @@ import {GameApi} from './api/game/game.api';
     AppRoutingModule,
     DefaultModule
   ],
-  providers: [GameApi],// include GameApi in providers
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

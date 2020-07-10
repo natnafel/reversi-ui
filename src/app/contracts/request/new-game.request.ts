@@ -1,6 +1,6 @@
-import {PlayerType} from '../shared/player-type.model';
+import {FirstMove} from '../shared/first-move.model';
 
 export interface NewGameRequest {
   userName: string;
-  firstMove: PlayerType;
+  firstMove: FirstMove;
 }
