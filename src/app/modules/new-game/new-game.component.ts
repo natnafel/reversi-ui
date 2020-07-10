@@ -11,5 +11,8 @@ export class NewGameComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
+  writeSearchWord(someTerm)
+  {
+    console.log(someTerm.value);
+  }
 }
