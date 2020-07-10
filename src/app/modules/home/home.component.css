@@ -1,0 +1,9 @@
+[clickable] {
+  cursor: pointer;
+}
+[clickable]:hover {
+  background: #d9d7d7;
+}
+.top-buffer {
+  margin-top: 30px;
+}

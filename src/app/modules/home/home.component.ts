@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {GameApi} from '../../api/game/game.api'
-import {GameResponse} from '../../contracts/response/game.response'
+import {Component, OnInit} from '@angular/core';
+import {GameApi} from '../../api/game/game.api';
+import {GameResponse} from '../../contracts/response/game.response';
+import {GameStatus} from '../../contracts/shared/game-status.model';
+import {Router} from '@angular/router';
+import {Player} from '../../contracts/shared/player.model';
 
 @Component({
   selector: 'app-home',
@@ -9,24 +12,31 @@ import {GameResponse} from '../../contracts/response/game.response'
 })
 export class HomeComponent implements OnInit {
 
-  games:GameResponse[];
-  //inject game service after including it in providers array of app.module.ts file
-  constructor(private gameService :GameApi) { }
+  activeGames: GameResponse[];
+  closedGames: GameResponse[];
+  constructor(
+    private gameService: GameApi,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.getGameList();
+    this.loadGameList();
   }
 
-  getGameList(){
+  loadGameList(): void{
     this.gameService.getGameList()
-    .subscribe((gameData)=>{
-      this.games = gameData;
-      console.log(this.games)
+    .subscribe((gameData) => {
+      this.activeGames = gameData.filter((value, index, array) => value.status === GameStatus.OPEN);
+      this.closedGames = gameData.filter((value, index, array) => value.status === GameStatus.CLOSED);
     },
-    (error)=>console.log(error))
+    (error) => console.log(error));
   }
 
-  viewGameDetails(){
-    //add routing to a specific game here
+  showGameBoard(game: GameResponse): void{
+    this.router.navigateByUrl('board/' + game.uuid);
+  }
+
+  winnerUsername(game: GameResponse): string {
+    return game.winner === Player.PLAYER1 ? game.player1.username : game.player2.username;
   }
 }
