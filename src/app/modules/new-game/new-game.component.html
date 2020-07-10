@@ -12,11 +12,43 @@
 
 <body>
     <div class="main-board-container">
-        <input type="search" onkeyup="" #searchTerm>
-        <button (click)="writeSearchWord(searchTerm)">
-            Hello
-        </button>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <form method="POST">
+                        <div class="form-group">
+                            <label class="mr-sm-2" class="text-muted" for="ipdomaintext">Domain:</label>
+                            <input type="text" class="form-control" id="ipdomaintext" placeholder="Enter ip or domain!" required="">
+                            <div class="invalid-feedback">
+                                Please provide a valid city.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" id="validationCustom04" placeholder="number input port" required="">
+                            <div class="invalid-feedback">
+                                Please provide a valid city.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="mr-sm-2" class="text-muted" for="inlineFormCustomSelect">Difficulty Level:</label>
+                            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                              <option selected>Choose...</option>
+                              <option value="1">Easy</option>
+                              <option value="2">Medium</option>
+                              <option value="3">Hard</option>
+                            </select>
+                        </div>
+                        <input class="btn btn-primary" type="button" (click)="writeSearchWord(userName)" value="Play game!">
+                    </form>
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
+        </div>
     </div>
+
 </body>
 
 </html>

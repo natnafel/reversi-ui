@@ -19,4 +19,5 @@ export class GameApi {
   getGameList(): Observable<GameResponse[]>{
     return this.http.get<GameResponse[]> (SERVICE_BASE_URL);
   }
+  
 }
