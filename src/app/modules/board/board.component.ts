@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
+import {GameResponse} from '../../contracts/response/game.response'
+import {GameApi} from '../../api/game/game.api';
+import {Router, ActivatedRoute} from '@angular/router';
+
 
 @Component({
   selector: 'app-board',
@@ -7,23 +11,33 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./board.component.css']
 })
 export class BoardComponent implements OnInit {
-  board:any[][];
-  constructor() { }
+  board:string[][];
+  game: GameResponse;
+  gameId: string;
+  constructor( private gameService: GameApi,
+    private router: Router,
+    private route: ActivatedRoute) { this.route.params
+      .subscribe(params=>{
+        this.gameId = params.gameUUID;
+      })
+  }
 
   ngOnInit(): void {
-    this.createNewBoard();
-    this.board[3][3] =1;
-    this.board[3][4] =2;
+    this.getGameDetails(this.gameId);
   }
 
   createNewBoard(){
-    this.board= [];
-    for(var i:number=0; i<8; i++){
-      this.board[i] = [];
-      for(var j:number = 0; j<8; j++){
-        this.board[i][j] = new Number();
-      }
+      console.log("game id is =========" + this.gameId)
     }
+
+  getGameDetails(gameId:string){
+    this.gameService.getGameDetails(gameId)
+    .subscribe((game)=>{
+                this.game = game;
+                this.board = game.board;
+              }
+    ,(error)=> console.log("Game detail request failed"));
+    
   }
 
 }

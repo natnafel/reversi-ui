@@ -11,4 +11,5 @@ export interface GameResponse {
   status: GameStatus;
   lastMoveId?: number;
   winner?: Player;
+  board?:string[][];
 }

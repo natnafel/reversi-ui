@@ -1,8 +1,8 @@
-<h1>baord</h1>
-<div *ngIf="board && board.length > 0">
+
+<div *ngIf="board && board.length > 0" class="text-center">
     <div *ngFor="let i of board">
         <span *ngFor="let j of i">
-            {{board[i][j]}}
+            <button>{{j}}</button>
         </span>
     </div>
 </div>
