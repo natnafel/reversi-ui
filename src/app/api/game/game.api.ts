@@ -24,4 +24,11 @@ export class GameApi {
       observe:"body"
     });
   }
+
+   // method to get the list of games
+   getGameDetail(): Observable<GameResponse[]>{
+    return this.http.get<GameResponse[]> (SERVICE_BASE_URL,{
+      observe:"body"
+    });
+  }
 }

@@ -1,1 +1,9 @@
-<p>board works!</p>
+<h1>baord</h1>
+<div *ngIf="board && board.length > 0">
+    <div *ngFor="let i of board">
+        <span *ngFor="let j of i">
+            {{board[i][j]}}
+        </span>
+    </div>
+</div>
+
