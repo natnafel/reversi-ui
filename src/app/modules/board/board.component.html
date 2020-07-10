@@ -1,9 +1,16 @@
 
 <div *ngIf="board && board.length > 0" class="text-center">
+    <h1>Board Details</h1>
     <div *ngFor="let i of board">
         <span *ngFor="let j of i">
             <button>{{j}}</button>
         </span>
     </div>
+
+    <div *ngIf="boardMoves && boardMoves.length > 0" class="text-center">
+        <h3>Board moves</h3>
+    </div>
+    
 </div>
+
 
