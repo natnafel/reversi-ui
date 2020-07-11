@@ -33,4 +33,12 @@ export class BoardComponent implements OnInit {
     ,(error) => console.log('Game detail request failed'));
   }
 
+  loadGameMoves(gameId:string):void{
+    this.gameService.loadGameMoves(gameId)
+      .subscribe((moves)=>{
+        this.boardMoves = moves;
+      }, (error)=>{
+        console.log(error);
+      })
+  }
 }

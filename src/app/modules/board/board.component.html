@@ -1,24 +1,48 @@
-
-<!-- <div *ngIf="board && board.length > 0" class="text-center">
-    <h1>Board Details</h1>
-    <div *ngFor="let i of board">
-        <span *ngFor="let j of i">
-            <button>{{j}}</button>
-        </span> -->
-<div *ngIf="game?.board && game.board.length > 0" class="text-center">
-    <div *ngFor="let i of game.board">
-        <div *ngFor="let j of i">
-            <div [className]="j % 2 == 0 ? 'board-cell-even' : 'board-cell-odd'">
-              <img alt="white" *ngIf="j === 'w'" width="10px" height="10px" src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.silvertowne.com%2Fp-25672-crown-stackables-1oz-999-silver-medallion.aspx&psig=AOvVaw3f59usaKiOCkxRv4WltnkO&ust=1594495469298000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCPiagtS0w-oCFQAAAAAdAAAAABAJ">
-              <img alt="black" *ngIf="j === 'b'" width="10px" height="10px" src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.iconfinder.com%2Ficons%2F3813530%2Fboardgames_checkers_draughts_games_king_crown_king_piece_monopoly_icon&psig=AOvVaw3f59usaKiOCkxRv4WltnkO&ust=1594495469298000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCPiagtS0w-oCFQAAAAAdAAAAABAD">
+<div class="container">
+    <div class="row">
+      <div class="col-sm-9">
+        <div *ngIf="game?.board && game.board.length > 0" class="text-center">
+            <div id="board" *ngIf="game?.board && game.board.length > 0" class="text-center">
+                <div *ngFor="let i of game.board; let row = index">
+                    <span *ngFor="let j of i; let col = index">
+                        <button [className]="(col + row) % 2 === 0 ? 'board-cell-even' : 'board-cell-odd'" [style]="j !== 'e' ? 'margin-top: -30px' : ''">
+                          <img alt="white" *ngIf="j === 'w'" width="70px" height="70px" src="https://cdn.clipart.email/b3baaf21a538566b2cbfe8bc92fe0864_full-moon-png-transparent-white-circle-png-download-1500x1500-_840-879.jpeg">
+                          <img alt="black" *ngIf="j === 'b'" width="70px" height="70px" src="https://i7.pngguru.com/preview/213/735/579/circle-packing-in-a-circle-clip-art-circle-thumbnail.jpg">
+                        </button>
+                    </span>
+                </div>
             </div>
         </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="game-info">
+            <span (click)= "loadGameMoves(gameId)" class="clickable">Game moves</span>
+            <div *ngIf="boardMoves && boardMoves.length > 0" class="text-center">
+                <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Player</th>
+                        <th scope="col">row</th>
+                        <th scope="col">column</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container >
+                        <tr *ngFor= "let boardMove of boardMoves; let i = index">
+                          <th scope="row">{{i+1}}</th>
+                          <td>{{boardMove.player.username}}</td>
+                          <td>{{boardMove.row}}</td>
+                          <td>{{boardMove.col}}</td>
+                        </tr>
+                     </ng-container>
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <div *ngIf="boardMoves && boardMoves.length > 0" class="text-center">
-        <h3>Board moves</h3>
-    </div>
-    
-</div>
 
 
