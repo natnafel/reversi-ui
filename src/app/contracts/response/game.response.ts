@@ -12,3 +12,4 @@ export interface GameResponse {
   lastMoveId?: number;
   winner?: Player;
 }
+

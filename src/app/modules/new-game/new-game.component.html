@@ -34,14 +34,18 @@
                         </div>
                         <div class="form-group">
                             <label class="mr-sm-2" class="text-muted" for="inlineFormCustomSelect">Difficulty Level:</label>
+
+                            <!-- <td>{{game.name}}</td> -->
                             <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-                              <option selected>Choose...</option>
-                              <option value="1">Easy</option>
-                              <option value="2">Medium</option>
-                              <option value="3">Hard</option>
-                            </select>
+                                    <option selected>Choose...</option>
+                                    <ng-container *ngFor="let game of activeAlgorithms; let i = index">
+                                    <option value="{{game.code}}">{{game.name}}</option>
+                                    </ng-container> 
+
+                                  </select>
+
                         </div>
-                        <input class="btn btn-primary" type="button" (click)="writeSearchWord(userName)" value="Play game!">
+                        <input class="btn btn-primary" type="button" value="Play game!">
                     </form>
                 </div>
                 <div class="col-md-4">
