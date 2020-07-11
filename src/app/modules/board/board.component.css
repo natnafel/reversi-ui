@@ -15,7 +15,6 @@ button{
 }
 div {
   line-height: 0;
-  margin: 0;
   max-height: 70px;
 }
 #board {
@@ -23,20 +22,18 @@ div {
 }
 
 img{
-  float:left;
-  margin-left:0.1em 
-}
-
+  float:left
+} 
 .game-info{
   margin-left: 0px;
   margin-right: 0px;
   margin-top: 20px;
 }
-
+/* 
 .col-sm-9{
   max-width: 60%;
 }
 .col-sm-3{
   max-width: 100%;
   margin-right: 0px;
-}
+} */
