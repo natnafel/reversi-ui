@@ -30,4 +30,8 @@ export class GameApi {
   loadGameMoves(gameId:string):Observable<Move[]>{
     return this.http.get<Move[]>(`${SERVICE_BASE_URL}/${gameId}/moves`);
   }
+
+  loadGameDetailsAtMoveId(gameId:string, moveId:number):Observable<GameResponse>{
+    return this.http.get<GameResponse> (SERVICE_BASE_URL + `/${gameId}/${moveId}`);
+  }
 }

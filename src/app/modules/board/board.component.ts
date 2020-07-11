@@ -13,13 +13,14 @@ import {Move} from '../../contracts/shared/board.moves';
 })
 export class BoardComponent implements OnInit {
   game: GameResponse;
-  gameId: string;
+  gameId: string;//helps us to get a game based on the retrieved param of a calling component
   boardMoves:Move[];
+
   constructor( private gameService: GameApi,
     private router: Router,
     private route: ActivatedRoute) { this.route.params
       .subscribe(params => {
-        this.gameId = params.gameUUID;
+        this.gameId = params.gameUUID;// get the gameId from the url of the current component
       });
   }
 
@@ -40,5 +41,27 @@ export class BoardComponent implements OnInit {
       }, (error)=>{
         console.log(error);
       })
+  }
+
+  previousMove(gameId:string, lastMoveId: number): void{
+    console.log(lastMoveId);
+    console.log("Previous move state");
+    this.gameService.loadGameDetailsAtMoveId(gameId, --lastMoveId)
+      .subscribe((game)=>{
+        this.game = game;
+      }, (error)=>{
+        console.log("Game not found at the provided moveId")
+      })
+  }
+
+  nextMove(gameId:string, lastMoveId: number): void{
+    console.log(lastMoveId);
+    console.log("next move state");
+    this.gameService.loadGameDetailsAtMoveId(gameId, --lastMoveId)
+    .subscribe((game)=>{
+      this.game = game;
+    }, (error)=>{
+      console.log("Game not found at the provided moveId")
+    })
   }
 }
