@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://demo4825983.mockable.io'
+  apiBaseUrl: 'http://localhost:8080/api'
 };
 
 /*
