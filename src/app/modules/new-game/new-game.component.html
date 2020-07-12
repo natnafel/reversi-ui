@@ -1,1 +1,38 @@
-<p>new-game works!</p>
+<div class="row top-element">
+    <div class="offset-3 col-sm-12 col-md-6">
+      <h3>Start a new Game</h3>
+        <form #gameForm="ngForm" (ngSubmit)="startGame()" name="gameForm" ngNativeValidate>
+            <div class="form-group">
+                <label for="domain">Domain Address</label>
+                <input type="text" class="form-control" id="domain" placeholder="Enter protocol with IP or domain" required [(ngModel)]="newGameForm.address" name="address">
+                <div class="invalid-feedback">
+                    Please provide domain address
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="port">Port</label>
+                <input type="number" class="form-control" id="port" placeholder="Port Number" required [(ngModel)]="newGameForm.port" name="port">
+                <div class="invalid-feedback">
+                    Please provide port number
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="algorithm">Algorithm</label>
+                <select class="custom-select mr-sm-2" id="algorithm" [(ngModel)]="newGameForm.algorithm" name="algorithm" required>
+                    <option *ngFor="let algorithm of activeAlgorithms" [value]="algorithm.code">{{algorithm.name}}</option>
+                </select>
+            </div>
+          <div class="form-group">
+            <label for="protocol">Protocol</label>
+            <select class="custom-select mr-sm-2" id="protocol" [(ngModel)]="newGameForm.protocol" name="protocol" required>
+                <option *ngFor="let protocol of protocols" [value]="protocol.code">{{protocol.name}}</option>
+            </select>
+          </div>
+          <label class="checkbox-container">Make first move
+            <input type="checkbox" checked [(ngModel)]="newGameForm.makeFirstMove" name="makeFirstMove">
+            <span class="checkmark"></span>
+          </label>
+            <input class="btn btn-primary" type="submit" value="Start Game">
+        </form>
+    </div>
+</div>

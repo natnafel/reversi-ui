@@ -1,6 +1,9 @@
-import {FirstMove} from '../shared/first-move.model';
-
-export interface NewGameRequest {
-  userName: string;
-  firstMove: FirstMove;
+export class NewGameRequest {
+  constructor(
+    public protocol: string,
+    public algorithm: string,
+    public makeFirstMove: boolean,
+    public address: string,
+    public port: number
+  ) { }
 }

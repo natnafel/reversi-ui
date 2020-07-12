@@ -6,6 +6,7 @@ import {NewGameComponent} from '../../modules/new-game/new-game.component';
 import {BoardComponent} from '../../modules/board/board.component';
 import {RouterModule} from '@angular/router';
 import {HeaderComponent} from '../header/header.component';
+import {FormsModule} from '@angular/forms';
 
 
 @NgModule({
@@ -16,9 +17,10 @@ import {HeaderComponent} from '../header/header.component';
     BoardComponent,
     HeaderComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule
-  ]
+    imports: [
+        CommonModule,
+        RouterModule,
+        FormsModule
+    ]
 })
 export class DefaultModule { }
