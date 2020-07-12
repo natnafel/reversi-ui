@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {GameApi} from '../../api/game/game.api';
 import {GameResponse} from '../../contracts/response/game.response';
 import {GameStatus} from '../../contracts/shared/game-status.model';
-import {Router} from '@angular/router';
+import {Router, ActivatedRoute} from '@angular/router';
 import {Player} from '../../contracts/shared/player.model';
 
 @Component({
@@ -16,8 +16,11 @@ export class HomeComponent implements OnInit {
   closedGames: GameResponse[];
   constructor(
     private gameService: GameApi,
-    private router: Router
-  ) { }
+    private router: Router,
+    private route: ActivatedRoute
+  ) { this.route.params
+    .subscribe(params=>console.log(params))
+  }
 
   ngOnInit(): void {
     this.loadGameList();
