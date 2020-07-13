@@ -9,14 +9,18 @@
 
   <div class="offset-2 col-sm-3">
       <h3>Game summary</h3>
-      <p><span (click)="previousMove()" class="clickable"><i class="fa fa-arrow-left fa-5x" aria-hidden="true"></i></span> <span style="margin-left: 20px; margin-right: 20px;"></span> <span (click)="nextMove()" class="clickable"><i class="fa fa-arrow-right fa-5x" aria-hidden="true"></i></span></p>
+      <p>
+        <span (click)="previousMove()" class="clickable"><i class="fa fa-arrow-left fa-5x" aria-hidden="true"></i></span>
+        <span style="margin-left: 20px; margin-right: 20px;"></span>
+        <span (click)="nextMove()" class="clickable"><i class="fa fa-arrow-right fa-5x" aria-hidden="true"></i></span>
+      </p>
 
       <table class="table table-striped">
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">Player1</th>
-            <th scope="col">Player2</th>
+            <th scope="col">Black</th>
+            <th scope="col">White</th>
           </tr>
         </thead>
         <tbody>
@@ -27,8 +31,8 @@
           </tr>
           <tr>
             <td>Score:</td>
-            <td>0</td>
-            <td>0</td>
+            <td>{{blackScore}}</td>
+            <td>{{whiteScore}}</td>
           </tr>
         </tbody>
       </table>

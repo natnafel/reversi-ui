@@ -27,6 +27,8 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
   lastTimeoutId: number;
   BOARD_SIZE = 8;
   board: CellValue[][];
+  blackScore = 2;
+  whiteScore = 2;
 
   constructor(
     private gameService: GameApi,
@@ -43,6 +45,8 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
 
   changeCellValue(cellLocation: CellLocation, cellValue: CellValue): void {
     this.board[cellLocation.row][cellLocation.col] = cellValue;
+    this.blackScore = this.score(CellValue.BLACK);
+    this.whiteScore = this.score(CellValue.WHITE);
   }
 
   getCellValue(cellLocation: CellLocation): CellValue {
@@ -62,10 +66,12 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
   }
 
   previousMove(): void {
+    if (this.lastAppliedCommandPosition < 0) { return; }
     this.boardCommands[--this.lastAppliedCommandPosition].undo();
   }
 
   nextMove(): void{
+    if (this.lastAppliedCommandPosition === this.boardCommands.length) { return; }
     this.boardCommands[++this.lastAppliedCommandPosition].apply();
   }
 
@@ -124,5 +130,13 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
     this.board[3][4] = CellValue.WHITE;
     this.board[4][3] = CellValue.WHITE;
     console.log(this.board);
+  }
+
+  score(cellValue: CellValue): number {
+    let count = 0;
+    this.board.forEach((rows) => rows.forEach((value) => {
+      if (value === cellValue) { count++; }
+    }));
+    return count;
   }
 }
