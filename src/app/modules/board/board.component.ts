@@ -1,14 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 
 import {GameResponse} from '../../contracts/response/game.response';
 import {GameApi} from '../../api/game/game.api';
 import {BoardView} from './board.view';
-import {BoardCommand} from './board.command';
-import {AddNewPieceCommand} from './add-new-piece.command';
+import {BoardCommand} from './command/board.command';
+import {AddNewPieceCommand} from './command/add-new-piece.command';
 import {CellLocation} from '../../contracts/shared/cell-location.model';
 import {CellValue} from '../../contracts/shared/cell-value.model';
-import {FlipCellsCommand} from './flip-cells.command';
+import {FlipCellsCommand} from './command/flip-cells.command';
 import {MoveResponse} from '../../contracts/response/move.response';
 import {GameStatus} from '../../contracts/shared/game-status.model';
 
@@ -33,13 +33,18 @@ export class BoardComponent implements BoardView, OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.gameId = params.gameUUID;
+      this.loadGameDetails();
+      this.loadGameMoves();
     });
-    this.loadGameDetails();
-    this.loadGameMoves();
   }
 
   changeCellValue(cellLocation: CellLocation, cellValue: CellValue): void {
     // TODO apply UI changes
+  }
+
+  getCellValue(cellLocation: CellLocation): CellValue {
+    // TODO get cell value on current board
+    return CellValue.EMPTY;
   }
 
   loadGameDetails(): void {
@@ -48,7 +53,6 @@ export class BoardComponent implements BoardView, OnInit {
   }
 
   loadGameMoves(): void {
-    this.loadGameDetails();
     this.gameService.loadGameMoves(this.gameId)
       .subscribe((moves) => {
         this.updateBoardCommands(moves);
@@ -84,7 +88,7 @@ export class BoardComponent implements BoardView, OnInit {
 
     if (this.game.status === GameStatus.OPEN) {
       this.loadGameDetails();
-      setTimeout(this.loadGameMoves, this.waitTime);
+      setTimeout(this.loadGameMoves.bind(this), this.waitTime);
     }
   }
 }
