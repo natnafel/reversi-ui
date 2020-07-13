@@ -21,18 +21,19 @@ import {GameStatus} from '../../contracts/shared/game-status.model';
 export class BoardComponent implements BoardView, OnInit {
   game: GameResponse;
   gameId: string;
-  boardCommands: BoardCommand[];
+  boardCommands = new Array<BoardCommand>();
   player1Username: string;
   lastAppliedCommandPosition = -1;
   waitTime = 1000 * 3; // 3 seconds
 
   constructor(
     private gameService: GameApi,
-    private router: Router,
     private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.gameId = this.route.snapshot.params.gameUUID;
+    this.route.params.subscribe(params => {
+      this.gameId = params.gameUUID;
+    });
     this.loadGameDetails();
     this.loadGameMoves();
   }
