@@ -29,6 +29,7 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
   board: CellValue[][];
   blackScore = 2;
   whiteScore = 2;
+  gameOpen = false;//assume game status is closed at the begining
 
   constructor(
     private gameService: GameApi,
@@ -99,6 +100,7 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
     }
 
     if (this.game.status === GameStatus.OPEN) {
+      this.gameOpen == true;
       this.loadGameDetails();
       this.lastTimeoutId = setTimeout(this.loadGameMoves.bind(this), this.waitTime);
     }

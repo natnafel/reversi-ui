@@ -9,7 +9,7 @@
 
   <div class="offset-2 col-sm-3">
       <h3>Game summary</h3>
-      <p>
+      <p *ngIf="gameOpen ==true">
         <span (click)="previousMove()" class="clickable"><i class="fa fa-arrow-left fa-5x" aria-hidden="true"></i></span>
         <span style="margin-left: 20px; margin-right: 20px;"></span>
         <span (click)="nextMove()" class="clickable"><i class="fa fa-arrow-right fa-5x" aria-hidden="true"></i></span>
@@ -23,16 +23,20 @@
             <th scope="col">White</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="game-info">
           <tr>
-            <td>UserName:</td>
+            <th scope="row">UserName:</th>
             <td>{{game?.player1.username}}</td>
             <td>{{game?.player2.username}}</td>
           </tr>
           <tr>
-            <td>Score:</td>
+            <th scope="row">Score:</th>
             <td>{{blackScore}}</td>
             <td>{{whiteScore}}</td>
+          </tr>
+          <tr *ngIf="gameOpen ==true">
+            <th scope="row">Winner:</th>
+            <td colspan="2">{{game?.winner?.username}}</td>
           </tr>
         </tbody>
       </table>

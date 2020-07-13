@@ -3,7 +3,10 @@ td {
   height: 65px;
   text-align: center;
 }
-
+.game-info tr td{
+  text-align: center;
+  height: 10px;
+}
 .empty-even {
   background-color: #e6b9a3;
 }
