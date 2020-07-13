@@ -1,75 +1,40 @@
-<div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-9">
-        <div *ngIf="game?.board && game.board.length > 0" class="text-center">
-            <div id="board" *ngIf="game?.board && game.board.length > 0" class="text-center">
-                <div *ngFor="let i of game.board; let row = index">
-                    <span *ngFor="let j of i; let col = index">
-                        <button [className]="(col + row) % 2 === 0 ? 'board-cell-even' : 'board-cell-odd'" [style]="j !== 'e' ? 'margin-top: -30px' : ''">
-                          <img alt="white" *ngIf="j === 'w'" width="70px" height="70px" src="https://cdn.clipart.email/b3baaf21a538566b2cbfe8bc92fe0864_full-moon-png-transparent-white-circle-png-download-1500x1500-_840-879.jpeg">
-                          <img alt="black" *ngIf="j === 'b'" width="70px" height="70px" src="https://i7.pngguru.com/preview/213/735/579/circle-packing-in-a-circle-clip-art-circle-thumbnail.jpg">
-                        </button>
-                    </span>
-                </div>
-            </div>
-        </div>
-      </div>
+<div class="row">
+  <table class="offset-2 col-sm-4">
+    <tr *ngFor="let row of board; let rNum = index">
+      <td *ngFor="let col of row; let cNum = index" [className]="emptyValueClass(rNum + cNum)">
+        <span [className]="board[rNum][cNum] !== 'e' ? occupiedValueClass(board[rNum][cNum]): ''"></span>
+      </td>
+    </tr>
+  </table>
 
-      <div class="col-sm-3">
+  <div class="offset-2 col-sm-3">
+      <h3>Game summary</h3>
+      <p><span (click)="previousMove()" class="clickable"><i class="fa fa-arrow-left fa-5x" aria-hidden="true"></i></span> <span style="margin-left: 20px; margin-right: 20px;"></span> <span (click)="nextMove()" class="clickable"><i class="fa fa-arrow-right fa-5x" aria-hidden="true"></i></span></p>
 
-          <h3>Game summary</h3>
-          <p><span (click)="previousMove()" class="clickable"><i class="fa fa-arrow-left fa-5x" aria-hidden="true"></i></span> <span style="margin-left: 20px; margin-right: 20px;"></span> <span (click)="nextMove()" class="clickable"><i class="fa fa-arrow-right fa-5x" aria-hidden="true"></i></span></p>
-
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Player1</th>
-                <th scope="col">Player2</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>UserName:</td>
-                <td>{{game?.player1.username}}</td>
-                <td>{{game?.player2.username}}</td>
-              </tr>
-              <tr>
-                <td>Score:</td>
-                <td>0</td>
-                <td>0</td>
-              </tr>
-            </tbody>
-          </table>
-
-        <!-- <div class="game-info">
-            <span (click)= "loadGameMoves(gameId)" class="clickable">Game moves</span>
-            <div *ngIf="boardMoves && boardMoves.length > 0" class="text-center">
-                <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Player</th>
-                        <th scope="col">row</th>
-                        <th scope="col">column</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <ng-container >
-                        <tr *ngFor= "let boardMove of boardMoves; let i = index">
-                          <th scope="row">{{i+1}}</th>
-                          <td>{{boardMove.player.username}}</td>
-                          <td>{{boardMove.row}}</td>
-                          <td>{{boardMove.col}}</td>
-                        </tr>
-                     </ng-container>
-                    </tbody>
-                  </table>
-            </div>
-        </div> -->
-      </div>
-    </div>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Player1</th>
+            <th scope="col">Player2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>UserName:</td>
+            <td>{{game?.player1.username}}</td>
+            <td>{{game?.player2.username}}</td>
+          </tr>
+          <tr>
+            <td>Score:</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+        </tbody>
+      </table>
   </div>
+</div>
+
 
 
 

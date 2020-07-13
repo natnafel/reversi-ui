@@ -1,18 +1,37 @@
+td {
+  width: 65px;
+  height: 65px;
+  text-align: center;
+}
 
-button{
-  width: 70px;
-  height: 70px;
-  border: none;
-  margin: 0;
-  padding: 0;
+.empty-even {
+  background-color: #e6b9a3;
+}
+
+.empty-odd {
+  background-color: #865930;
+}
+
+.black-occupied {
   display: inline-block;
+  width: 20px;
+  height: 20px;
+  padding: 25px;
+  background-color: black;
+  border: 1px solid white;
+  border-radius: 50%;
 }
-.board-cell-even {
-  background: #d7d7d7;
+
+.white-occupied {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  padding: 25px;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 50%;
 }
-.board-cell-odd {
-  background: #858585;
-}
+
 div {
   line-height: 0;
   max-height: 70px;
@@ -23,13 +42,13 @@ div {
 
 img{
   float:left
-} 
+}
 .game-info{
   margin-left: 0px;
   margin-right: 0px;
   margin-top: 20px;
 }
-/* 
+/*
 .col-sm-9{
   max-width: 60%;
 }
