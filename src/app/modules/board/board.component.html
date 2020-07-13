@@ -18,8 +18,8 @@
       <div class="col-sm-3">
 
           <h3>Game summary</h3>
-          <p><span (click)="previousMove(gameId, game.lastMoveId)" class="clickable"><i class="fa fa-arrow-left fa-5x" aria-hidden="true"></i></span> <span style="margin-left: 20px; margin-right: 20px;"></span> <span (click)="nextMove(gameId, game.lastMoveId)" class="clickable"><i class="fa fa-arrow-right fa-5x" aria-hidden="true"></i></span></p>
-         
+          <p><span (click)="previousMove()" class="clickable"><i class="fa fa-arrow-left fa-5x" aria-hidden="true"></i></span> <span style="margin-left: 20px; margin-right: 20px;"></span> <span (click)="nextMove()" class="clickable"><i class="fa fa-arrow-right fa-5x" aria-hidden="true"></i></span></p>
+
           <table class="table table-striped">
             <thead>
               <tr>
@@ -31,8 +31,8 @@
             <tbody>
               <tr>
                 <td>UserName:</td>
-                <td>{{game.player1.username}}</td>
-                <td>{{game.player2.username}}</td>
+                <td>{{game?.player1.username}}</td>
+                <td>{{game?.player2.username}}</td>
               </tr>
               <tr>
                 <td>Score:</td>
@@ -41,7 +41,7 @@
               </tr>
             </tbody>
           </table>
-          
+
         <!-- <div class="game-info">
             <span (click)= "loadGameMoves(gameId)" class="clickable">Game moves</span>
             <div *ngIf="boardMoves && boardMoves.length > 0" class="text-center">

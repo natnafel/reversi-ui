@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 
 import {environment} from '../../../environments/environment';
 import {GameResponse} from '../../contracts/response/game.response';
-import {Move} from '../../contracts/shared/board.moves';
+import {MoveResponse} from '../../contracts/response/move.response';
 import {NewGameRequest} from '../../contracts/request/new-game.request';
 import {NewGameResponse} from '../../contracts/response/new-game.response';
 
@@ -32,8 +32,8 @@ export class GameApi {
     return this.http.get<GameResponse> (SERVICE_BASE_URL + `/${gameId}`);
   }
 
-  loadGameMoves(gameId: string): Observable<Move[]>{
-    return this.http.get<Move[]>(`${SERVICE_BASE_URL}/${gameId}/moves`);
+  loadGameMoves(gameId: string): Observable<MoveResponse[]>{
+    return this.http.get<MoveResponse[]>(`${SERVICE_BASE_URL}/${gameId}/moves`);
   }
 
   loadGameDetailsAtMoveId(gameId: string, moveId: number): Observable<GameResponse>{

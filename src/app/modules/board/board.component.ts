@@ -1,9 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {GameResponse} from '../../contracts/response/game.response';
 import {GameApi} from '../../api/game/game.api';
-import {Move} from '../../contracts/shared/board.moves';
+import {BoardView} from './board.view';
+import {BoardCommand} from './board.command';
+import {AddNewPieceCommand} from './add-new-piece.command';
+import {CellLocation} from '../../contracts/shared/cell-location.model';
+import {CellValue} from '../../contracts/shared/cell-value.model';
+import {FlipCellsCommand} from './flip-cells.command';
+import {MoveResponse} from '../../contracts/response/move.response';
+import {GameStatus} from '../../contracts/shared/game-status.model';
 
 
 @Component({
@@ -11,57 +18,72 @@ import {Move} from '../../contracts/shared/board.moves';
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.css']
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements BoardView, OnInit {
   game: GameResponse;
-  gameId: string;//helps us to get a game based on the retrieved param of a calling component
-  boardMoves:Move[];
+  gameId: string;
+  boardCommands: BoardCommand[];
+  player1Username: string;
+  lastAppliedCommandPosition = -1;
+  waitTime = 1000 * 3; // 3 seconds
 
-  constructor( private gameService: GameApi,
+  constructor(
+    private gameService: GameApi,
     private router: Router,
-    private route: ActivatedRoute) { this.route.params
-      .subscribe(params => {
-        this.gameId = params.gameUUID;// get the gameId from the url of the current component
+    private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+    this.gameId = this.route.snapshot.params.gameUUID;
+    this.loadGameDetails();
+    this.loadGameMoves();
+  }
+
+  changeCellValue(cellLocation: CellLocation, cellValue: CellValue): void {
+    // TODO apply UI changes
+  }
+
+  loadGameDetails(): void {
+    this.gameService.getGameDetails(this.gameId)
+    .subscribe((game) => this.game = game, (error) => console.log('Game detail request failed'));
+  }
+
+  loadGameMoves(): void {
+    this.loadGameDetails();
+    this.gameService.loadGameMoves(this.gameId)
+      .subscribe((moves) => {
+        this.updateBoardCommands(moves);
       });
   }
 
-  ngOnInit(): void {
-    this.loadGameDetails(this.gameId);
+  previousMove(): void {
+    this.boardCommands[--this.lastAppliedCommandPosition].undo();
   }
 
-  loadGameDetails(gameId: string): void {
-    this.gameService.getGameDetails(gameId)
-    .subscribe((game) => this.game = game
-    ,(error) => console.log('Game detail request failed'));
+  nextMove(): void{
+    this.boardCommands[++this.lastAppliedCommandPosition].apply();
   }
 
-  loadGameMoves(gameId:string):void{
-    this.gameService.loadGameMoves(gameId)
-      .subscribe((moves)=>{
-        this.boardMoves = moves;
-      }, (error)=>{
-        console.log(error);
-      })
+  cellValueForUsername(username: string): CellValue {
+    // convention: player 1 is black
+    return username === this.player1Username ? CellValue.BLACK : CellValue.WHITE;
   }
 
-  previousMove(gameId:string, lastMoveId: number): void{
-    console.log(lastMoveId);
-    console.log("Previous move state");
-    this.gameService.loadGameDetailsAtMoveId(gameId, --lastMoveId)
-      .subscribe((game)=>{
-        this.game = game;
-      }, (error)=>{
-        console.log("Game not found at the provided moveId")
-      })
-  }
+  updateBoardCommands(moves: MoveResponse[]): void {
+    if (moves !== null) {
+      moves.sort((a, b) => {
+        if (a.id > b.id) { return 1; }
+        else if (a.id < b.id) { return -1; }
+        return 0;
+      });
+      moves.forEach((moveResponse, i) => {
+        this.boardCommands.push(new AddNewPieceCommand(this, new CellLocation(moveResponse.row, moveResponse.col),
+          this.cellValueForUsername(moveResponse.player.username)));
+        this.boardCommands.push(new FlipCellsCommand(this, moveResponse.cellsToFlip));
+      });
+    }
 
-  nextMove(gameId:string, lastMoveId: number): void{
-    console.log(lastMoveId);
-    console.log("next move state");
-    this.gameService.loadGameDetailsAtMoveId(gameId, --lastMoveId)
-    .subscribe((game)=>{
-      this.game = game;
-    }, (error)=>{
-      console.log("Game not found at the provided moveId")
-    })
+    if (this.game.status === GameStatus.OPEN) {
+      this.loadGameDetails();
+      setTimeout(this.loadGameMoves, this.waitTime);
+    }
   }
 }
