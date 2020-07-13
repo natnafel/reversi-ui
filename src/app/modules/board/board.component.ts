@@ -22,16 +22,20 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
   game: GameResponse;
   gameId: string;
   boardCommands = new Array<BoardCommand>();
-  player1Username: string;
   lastAppliedCommandPosition = -1;
   waitTime = 1000 * 3; // 3 seconds
   lastTimeoutId: number;
+  BOARD_SIZE = 8;
+  board: CellValue[][];
+  blackScore = 2;
+  whiteScore = 2;
 
   constructor(
     private gameService: GameApi,
     private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.boardToStartState();
     this.route.params.subscribe(params => {
       this.gameId = params.gameUUID;
       this.loadGameDetails();
@@ -40,12 +44,13 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
   }
 
   changeCellValue(cellLocation: CellLocation, cellValue: CellValue): void {
-    // TODO apply UI changes
+    this.board[cellLocation.row][cellLocation.col] = cellValue;
+    this.blackScore = this.score(CellValue.BLACK);
+    this.whiteScore = this.score(CellValue.WHITE);
   }
 
   getCellValue(cellLocation: CellLocation): CellValue {
-    // TODO get cell value on current board
-    return CellValue.EMPTY;
+    return this.board[cellLocation.row][cellLocation.col];
   }
 
   loadGameDetails(): void {
@@ -61,16 +66,18 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
   }
 
   previousMove(): void {
+    if (this.lastAppliedCommandPosition < 0) { return; }
     this.boardCommands[--this.lastAppliedCommandPosition].undo();
   }
 
   nextMove(): void{
+    if (this.lastAppliedCommandPosition === this.boardCommands.length) { return; }
     this.boardCommands[++this.lastAppliedCommandPosition].apply();
   }
 
   cellValueForUsername(username: string): CellValue {
     // convention: player 1 is black
-    return username === this.player1Username ? CellValue.BLACK : CellValue.WHITE;
+    return username === this.game.player1.username ? CellValue.BLACK : CellValue.WHITE;
   }
 
   ngOnDestroy(): void {
@@ -95,5 +102,41 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
       this.loadGameDetails();
       this.lastTimeoutId = setTimeout(this.loadGameMoves.bind(this), this.waitTime);
     }
+  }
+
+  emptyValueClass(counter: number): string {
+    return counter % 2 === 0 ? 'empty-even' : 'empty-odd';
+  }
+
+  occupiedValueClass(cellValue: CellValue): string {
+    return cellValue === CellValue.WHITE ? 'black-occupied' : 'white-occupied';
+  }
+
+  emptyBoard(): CellValue[][] {
+    const board = [];
+    for (let i = 0; i < this.BOARD_SIZE; i++) {
+      board.push(new Array<CellValue>());
+      for (let j = 0; j < this.BOARD_SIZE; j++) {
+        board[i].push(CellValue.EMPTY);
+      }
+    }
+    return board;
+  }
+
+  boardToStartState(): void {
+    this.board = this.emptyBoard();
+    this.board[3][3] = CellValue.BLACK;
+    this.board[4][4] = CellValue.BLACK;
+    this.board[3][4] = CellValue.WHITE;
+    this.board[4][3] = CellValue.WHITE;
+    console.log(this.board);
+  }
+
+  score(cellValue: CellValue): number {
+    let count = 0;
+    this.board.forEach((rows) => rows.forEach((value) => {
+      if (value === cellValue) { count++; }
+    }));
+    return count;
   }
 }
