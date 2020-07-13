@@ -1,8 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+
 import {environment} from '../../../environments/environment';
 import {GameResponse} from '../../contracts/response/game.response';
-import {Observable} from 'rxjs';
+import {MoveResponse} from '../../contracts/response/move.response';
 import {NewGameRequest} from '../../contracts/request/new-game.request';
 import {NewGameResponse} from '../../contracts/response/new-game.response';
 
@@ -22,7 +24,19 @@ export class GameApi {
     return this.http.get<GameResponse[]> (SERVICE_BASE_URL);
   }
 
-  startGame(newGameRequest: NewGameRequest): Observable<NewGameResponse>  {
+  startGame(newGameRequest: NewGameRequest): Observable<NewGameResponse> {
     return this.http.post<NewGameResponse>(`${SERVICE_BASE_URL}/away`, newGameRequest);
+  }
+  // method to get a specific game
+  getGameDetails(gameId: string): Observable<GameResponse>{
+    return this.http.get<GameResponse> (SERVICE_BASE_URL + `/${gameId}`);
+  }
+
+  loadGameMoves(gameId: string): Observable<MoveResponse[]>{
+    return this.http.get<MoveResponse[]>(`${SERVICE_BASE_URL}/${gameId}/moves`);
+  }
+
+  loadGameDetailsAtMoveId(gameId: string, moveId: number): Observable<GameResponse>{
+    return this.http.get<GameResponse> (SERVICE_BASE_URL + `/${gameId}/${moveId}`);
   }
 }
