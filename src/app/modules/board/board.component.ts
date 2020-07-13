@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 import {GameResponse} from '../../contracts/response/game.response';
@@ -18,13 +18,14 @@ import {GameStatus} from '../../contracts/shared/game-status.model';
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.css']
 })
-export class BoardComponent implements BoardView, OnInit {
+export class BoardComponent implements BoardView, OnInit, OnDestroy {
   game: GameResponse;
   gameId: string;
   boardCommands = new Array<BoardCommand>();
   player1Username: string;
   lastAppliedCommandPosition = -1;
   waitTime = 1000 * 3; // 3 seconds
+  lastTimeoutId: number;
 
   constructor(
     private gameService: GameApi,
@@ -72,6 +73,10 @@ export class BoardComponent implements BoardView, OnInit {
     return username === this.player1Username ? CellValue.BLACK : CellValue.WHITE;
   }
 
+  ngOnDestroy(): void {
+    clearTimeout(this.lastTimeoutId);
+  }
+
   updateBoardCommands(moves: MoveResponse[]): void {
     if (moves !== null) {
       moves.sort((a, b) => {
@@ -88,7 +93,7 @@ export class BoardComponent implements BoardView, OnInit {
 
     if (this.game.status === GameStatus.OPEN) {
       this.loadGameDetails();
-      setTimeout(this.loadGameMoves.bind(this), this.waitTime);
+      this.lastTimeoutId = setTimeout(this.loadGameMoves.bind(this), this.waitTime);
     }
   }
 }
