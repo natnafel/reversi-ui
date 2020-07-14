@@ -10,9 +10,9 @@
   <div class="offset-2 col-sm-3">
       <h3>Game summary</h3>
       <p *ngIf="gameOpen ==true">
-        <span (click)="previousMove()" class="clickable"><i class="fa fa-arrow-left fa-5x" aria-hidden="true"></i></span>
+        <span *ngIf="enablePreviouseMove == true" (click)="previousMove()" class="clickable"><i class="fa fa-arrow-left fa-5x" aria-hidden="true"></i></span>
         <span style="margin-left: 20px; margin-right: 20px;"></span>
-        <span (click)="nextMove()" class="clickable"><i class="fa fa-arrow-right fa-5x" aria-hidden="true"></i></span>
+        <span *ngIf="enableNextMove == true" (click)="nextMove()" class="clickable"><i class="fa fa-arrow-right fa-5x" aria-hidden="true"></i></span>
       </p>
 
       <table class="table table-striped">
@@ -36,7 +36,7 @@
           </tr>
           <tr *ngIf="gameOpen ==true">
             <th scope="row">Winner:</th>
-            <td colspan="2">{{game?.winner?.username}}</td>
+            <td (click)="getDefaultUserCellValueColour()" colspan="2">{{winner}}</td>
           </tr>
         </tbody>
       </table>

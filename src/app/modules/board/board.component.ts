@@ -1,6 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
+
 import {GameResponse} from '../../contracts/response/game.response';
 import {GameApi} from '../../api/game/game.api';
 import {BoardView} from './board.view';
@@ -11,6 +12,7 @@ import {CellValue} from '../../contracts/shared/cell-value.model';
 import {FlipCellsCommand} from './command/flip-cells.command';
 import {MoveResponse} from '../../contracts/response/move.response';
 import {GameStatus} from '../../contracts/shared/game-status.model';
+import {DefaultUserServiceService} from '../../api/default-user-service/default-user-service.service'
 
 
 @Component({
@@ -27,13 +29,23 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
   lastTimeoutId: number;
   BOARD_SIZE = 8;
   board: CellValue[][];
+  defaultUserCellValue:CellValue;
   blackScore = 2;
   whiteScore = 2;
+  interval = null;
+  backInterval = null;
   gameOpen = false;//assume game status is closed at the begining
+  nextCount = 0;
+  backCount = 0;
+  // gameOver = false;
+  enableNextMove = true;
+  enablePreviouseMove = false;
+  winner:string;
 
   constructor(
     private gameService: GameApi,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private defaultUserService:DefaultUserServiceService) { }
 
   ngOnInit(): void {
     this.boardToStartState();
@@ -56,7 +68,14 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
 
   loadGameDetails(): void {
     this.gameService.getGameDetails(this.gameId)
-    .subscribe((game) => this.game = game, (error) => console.log('Game detail request failed'));
+    .subscribe((game) => {
+      console.log(game.status);
+      if(game.status== GameStatus.CLOSED){
+        this.gameOpen = true;
+      }
+      this.winner = game.winner;
+      this.game = game
+    }, (error) => console.log('Game detail request failed'));
   }
 
   loadGameMoves(): void {
@@ -67,15 +86,46 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
   }
 
   previousMove(): void {
-    if (this.lastAppliedCommandPosition < 0) { return; }
+    this.nextCount = 0;
+    this.enableNextMove = false;
+
+    setInterval(()=>{
+      this.backCount++;
+      if(this.backCount == 118){
+        this.enableNextMove = true;
+        this.enablePreviouseMove = false;
+      }
+
+      // console.log(this.enablePreviouseMove);
+
+    if (this.lastAppliedCommandPosition < 0 || this.enablePreviouseMove === false) { 
+      console.log(this.lastAppliedCommandPosition);
+      console.log("===========================================");
+      console.log(this.enablePreviouseMove);
+      return; 
+    }
     this.boardCommands[--this.lastAppliedCommandPosition].undo();
+    
+    console.log(this.backCount);
+  },100);
   }
 
   nextMove(): void{
-    if (this.lastAppliedCommandPosition === this.boardCommands.length) { return; }
-    this.boardCommands[++this.lastAppliedCommandPosition].apply();
-  }
+    this.backCount = 0;
+    this.enablePreviouseMove = false;
+    this.interval = setInterval(()=>{
+      this.nextCount++
+      if(this.nextCount==119){
+        this.enablePreviouseMove = true;
+        this.enableNextMove = false;
+      }
 
+    if (this.lastAppliedCommandPosition === this.boardCommands.length || this.enableNextMove == false) { return; }
+    this.boardCommands[++this.lastAppliedCommandPosition].apply();
+    console.log(this.nextCount);
+    },100);
+  }
+ 
   cellValueForUsername(username: string): CellValue {
     // convention: player 1 is black
     return username === this.game.player1.username ? CellValue.BLACK : CellValue.WHITE;
@@ -97,12 +147,6 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
           this.cellValueForUsername(moveResponse.player.username)));
         this.boardCommands.push(new FlipCellsCommand(this, moveResponse.cellsToFlip));
       });
-    }
-
-    if (this.game.status === GameStatus.OPEN) {
-      this.gameOpen == true;
-      this.loadGameDetails();
-      this.lastTimeoutId = setTimeout(this.loadGameMoves.bind(this), this.waitTime);
     }
   }
 
@@ -131,7 +175,6 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
     this.board[4][4] = CellValue.BLACK;
     this.board[3][4] = CellValue.WHITE;
     this.board[4][3] = CellValue.WHITE;
-    console.log(this.board);
   }
 
   score(cellValue: CellValue): number {
@@ -140,5 +183,16 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
       if (value === cellValue) { count++; }
     }));
     return count;
+  }
+
+  getDefaultUserCellValueColour(){
+    this.defaultUserService.getDefaultUserCellValue()
+      .subscribe((defaultUserCellValue)=>{
+        console.log("default user cell value is: =======================")
+        console.log(defaultUserCellValue);
+      },
+      (error)=>{
+        console.log(error);
+      })
   }
 }
