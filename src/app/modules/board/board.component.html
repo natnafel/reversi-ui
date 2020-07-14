@@ -13,11 +13,11 @@
         Winner: {{winner()}}
       </h4>
       <span style="float: left">
-        <a [hidden]="!hasPreviousCommand()" (click)="previousMove()" class="nav-button unselectable">&laquo; Previous</a>
+        <a [hidden]="!hasPreviousCommand() || autoPlay" (click)="previousMove()" class="nav-button unselectable">&laquo; Previous</a>
       </span>
-
+      <a (click)="toggleAutoPlay()" class="nav-button unselectable">Toggle Auto Play</a>
       <span style="float: right">
-        <a [hidden]="!hasNextCommand()" (click)="nextMove()" class="nav-button unselectable">Next &raquo;</a>
+        <a [hidden]="!hasNextCommand() || autoPlay" (click)="nextMove()" class="nav-button unselectable">Next &raquo;</a>
       </span>
 
       <table class="table table-striped game-info">

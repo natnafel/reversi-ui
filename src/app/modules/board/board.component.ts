@@ -33,6 +33,7 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
   blackScore = 2;
   whiteScore = 2;
   defaultUserCellValue: CellValue;
+  autoPlay = false;
 
   constructor(
     private gameService: GameApi,
@@ -174,6 +175,9 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
     console.log('lastCommand: ' + this.lastAppliedCommandPosition);
     if (!this.gameOver()) {
       this.lastAutoPlayId = setTimeout(this.autoPlayNext.bind(this), this.playBackDelay);
+      this.autoPlay = true;
+    } else {
+      this.autoPlay = false;
     }
   }
 
@@ -193,5 +197,14 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
   scoreForUsername(username: string): number {
     if (username == null) { return 0; }
     return this.score(this.cellValueForUsername(username));
+  }
+
+  toggleAutoPlay(): void{
+    if (this.autoPlay) {
+      clearTimeout(this.lastAutoPlayId);
+      this.autoPlay = false;
+    } else {
+      this.autoPlayNext();
+    }
   }
 }
