@@ -11,6 +11,7 @@ import {CellValue} from '../../contracts/shared/cell-value.model';
 import {FlipCellsCommand} from './command/flip-cells.command';
 import {MoveResponse} from '../../contracts/response/move.response';
 import {GameStatus} from '../../contracts/shared/game-status.model';
+import {DefaultUserService} from '../../api/general/default-user.service';
 
 
 @Component({
@@ -24,22 +25,33 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
   boardCommands = new Array<BoardCommand>();
   lastAppliedCommandPosition = -1;
   waitTime = 1000 * 3; // 3 seconds
+  playBackDelay = 1000 * 0.5; // 0.5 sec
   lastTimeoutId: number;
+  lastAutoPlayId: number;
   BOARD_SIZE = 8;
   board: CellValue[][];
   blackScore = 2;
   whiteScore = 2;
+  defaultUserCellValue: CellValue;
 
   constructor(
     private gameService: GameApi,
-    private route: ActivatedRoute) { }
+    private defaultUserService: DefaultUserService,
+    private route: ActivatedRoute) {
+    this.defaultUserService.getDefaultUserCellValue().subscribe((cellValue) => this.defaultUserCellValue = CellValue[cellValue]);
+    this.boardToStartState();
+  }
 
   ngOnInit(): void {
-    this.boardToStartState();
     this.route.params.subscribe(params => {
       this.gameId = params.gameUUID;
       this.loadGameDetails();
       this.loadGameMoves();
+      this.gameService.getGameDetails(this.gameId).subscribe((game) => {
+        if (game.status === GameStatus.OPEN) {
+          this.autoPlayNext();
+        }
+      });
     });
   }
 
@@ -66,31 +78,43 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
   }
 
   previousMove(): void {
-    if (this.lastAppliedCommandPosition < 0) { return; }
-    this.boardCommands[--this.lastAppliedCommandPosition].undo();
+    if (this.hasPreviousCommand()) {
+      this.boardCommands[this.lastAppliedCommandPosition--].undo();
+    }
   }
 
   nextMove(): void{
-    if (this.lastAppliedCommandPosition === this.boardCommands.length) { return; }
-    this.boardCommands[++this.lastAppliedCommandPosition].apply();
+    if (this.hasNextCommand()) {
+      this.boardCommands[++this.lastAppliedCommandPosition].apply();
+    }
   }
 
   cellValueForUsername(username: string): CellValue {
-    // convention: player 1 is black
-    return username === this.game.player1.username ? CellValue.BLACK : CellValue.WHITE;
+    if (username == null) { return; }
+    return username === this.game.player1.username ? this.defaultUserCellValue : this.oppositeValue(this.defaultUserCellValue);
   }
 
   ngOnDestroy(): void {
     clearTimeout(this.lastTimeoutId);
+    clearTimeout(this.lastAutoPlayId);
+  }
+
+  hasPreviousCommand(): boolean {
+    return this.lastAppliedCommandPosition > -1 && this.boardCommands.length !== 0;
+  }
+
+  hasNextCommand(): boolean {
+    return this.lastAppliedCommandPosition < this.boardCommands.length - 1 && this.boardCommands.length !== 0;
   }
 
   updateBoardCommands(moves: MoveResponse[]): void {
-    if (moves !== null) {
+    if (moves !== null && this.defaultUserCellValue != null) {
       moves.sort((a, b) => {
         if (a.id > b.id) { return 1; }
         else if (a.id < b.id) { return -1; }
         return 0;
       });
+      this.boardCommands = [];
       moves.forEach((moveResponse, i) => {
         this.boardCommands.push(new AddNewPieceCommand(this, new CellLocation(moveResponse.row, moveResponse.col),
           this.cellValueForUsername(moveResponse.player.username)));
@@ -98,7 +122,7 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
       });
     }
 
-    if (this.game.status === GameStatus.OPEN) {
+    if (this.game == null || this.game.status === GameStatus.OPEN) {
       this.loadGameDetails();
       this.lastTimeoutId = setTimeout(this.loadGameMoves.bind(this), this.waitTime);
     }
@@ -109,7 +133,13 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
   }
 
   occupiedValueClass(cellValue: CellValue): string {
-    return cellValue === CellValue.WHITE ? 'black-occupied' : 'white-occupied';
+    return cellValue === CellValue.WHITE ? 'white-occupied' : 'black-occupied';
+  }
+
+  oppositeValue(value: CellValue): CellValue {
+    if (value === CellValue.WHITE) { return CellValue.BLACK; }
+    if (value === CellValue.BLACK) { return CellValue.WHITE; }
+    throw Error('Can not flip an empty value');
   }
 
   emptyBoard(): CellValue[][] {
@@ -129,7 +159,6 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
     this.board[4][4] = CellValue.BLACK;
     this.board[3][4] = CellValue.WHITE;
     this.board[4][3] = CellValue.WHITE;
-    console.log(this.board);
   }
 
   score(cellValue: CellValue): number {
@@ -138,5 +167,31 @@ export class BoardComponent implements BoardView, OnInit, OnDestroy {
       if (value === cellValue) { count++; }
     }));
     return count;
+  }
+
+  autoPlayNext(): void {
+    this.nextMove();
+    console.log('lastCommand: ' + this.lastAppliedCommandPosition);
+    if (!this.gameOver()) {
+      this.lastAutoPlayId = setTimeout(this.autoPlayNext.bind(this), this.playBackDelay);
+    }
+  }
+
+  gameOver(): boolean {
+    return this.game != null && this.game.status === GameStatus.CLOSED && !this.hasNextCommand();
+  }
+
+  winner(): string {
+    if (this.blackScore > this.whiteScore) {
+      return 'Black';
+    } else if (this.blackScore < this.whiteScore) {
+      return 'White';
+    }
+    return 'It\'s a Tie';
+  }
+
+  scoreForUsername(username: string): number {
+    if (username == null) { return 0; }
+    return this.score(this.cellValueForUsername(username));
   }
 }
