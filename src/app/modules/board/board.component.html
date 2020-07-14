@@ -2,25 +2,30 @@
   <table class="offset-2 col-sm-4">
     <tr *ngFor="let row of board; let rNum = index">
       <td *ngFor="let col of row; let cNum = index" [className]="emptyValueClass(rNum + cNum)">
-        <span [className]="board[rNum][cNum] !== 'e' ? occupiedValueClass(board[rNum][cNum]): ''"></span>
+        <span [className]="board[rNum][cNum] !== 'Empty' ? occupiedValueClass(board[rNum][cNum]): ''"></span>
       </td>
     </tr>
   </table>
 
-  <div class="offset-2 col-sm-3">
+  <div class="offset-1 col-sm-5">
       <h3>Game summary</h3>
-      <p>
-        <span (click)="previousMove()" class="clickable"><i class="fa fa-arrow-left fa-5x" aria-hidden="true"></i></span>
-        <span style="margin-left: 20px; margin-right: 20px;"></span>
-        <span (click)="nextMove()" class="clickable"><i class="fa fa-arrow-right fa-5x" aria-hidden="true"></i></span>
-      </p>
+      <h4 *ngIf="gameOver()" class="winner">
+        Winner: {{winner()}}
+      </h4>
+      <span style="float: left">
+        <a [hidden]="!hasPreviousCommand()" (click)="previousMove()" class="nav-button unselectable">&laquo; Previous</a>
+      </span>
 
-      <table class="table table-striped">
+      <span style="float: right">
+        <a [hidden]="!hasNextCommand()" (click)="nextMove()" class="nav-button unselectable">Next &raquo;</a>
+      </span>
+
+      <table class="table table-striped game-info">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">Black</th>
-            <th scope="col">White</th>
+            <th scope="col"></th>
+            <th scope="col">{{cellValueForUsername(game?.player1.username)}}</th>
+            <th scope="col">{{cellValueForUsername(game?.player2.username)}}</th>
           </tr>
         </thead>
         <tbody>
@@ -31,8 +36,8 @@
           </tr>
           <tr>
             <td>Score:</td>
-            <td>{{blackScore}}</td>
-            <td>{{whiteScore}}</td>
+            <td>{{scoreForUsername(game?.player1.username)}}</td>
+            <td>{{scoreForUsername(game?.player2.username)}}</td>
           </tr>
         </tbody>
       </table>

@@ -1,5 +1,5 @@
 export enum CellValue {
-  EMPTY = 'e',
-  BLACK = 'b',
-  WHITE = 'w'
+  EMPTY = 'Empty',
+  BLACK = 'Black',
+  WHITE = 'White'
 }
